@@ -54,3 +54,8 @@ env.bak/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# ==========================
+# Carpetas a ignorar
+# ==========================
+/data/
