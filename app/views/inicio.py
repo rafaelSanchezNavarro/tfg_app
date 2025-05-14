@@ -9,7 +9,8 @@ from app.logic.load_data import (
     default_isolation_model,
     default_dbsan_model,
 )
-from app.logic.producer import start_kafka_producer
+# from app.logic.producer import start_kafka_producer
+from app.logic.producer import start_simulated_traffic
 from app.views import show_architecture_2, show_dbscan, show_isolation
 
 def show():
@@ -49,7 +50,8 @@ def show():
         # Lanzar el productor solo una vez
         if "producer_started" not in st.session_state:
             st.session_state.producer_started = True
-            start_kafka_producer()
+            # start_kafka_producer()
+            start_simulated_traffic()
 
         use_default = st.checkbox("Usar modelo predeterminado")
         if use_default:

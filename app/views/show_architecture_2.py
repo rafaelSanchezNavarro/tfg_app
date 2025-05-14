@@ -9,7 +9,8 @@ from sklearn.exceptions import InconsistentVersionWarning
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 import matplotlib.pyplot as plt
 import seaborn as sns
-from app.logic.consumer import consume_traffic_from_kafka
+# from app.logic.consumer import consume_traffic_from_kafka
+from app.logic.consumer import consume_traffic_simulado
 
 
 def highlight(row):
@@ -20,6 +21,9 @@ def show(modelo, y_test):
     if "real_time_running" not in st.session_state:
         st.session_state.real_time_running = False
     anomaly_detected = False
+    
+    if "explicaciones_container" not in st.session_state:
+        st.session_state.explicaciones_container = st.empty()
 
     if st.button("▶️ Iniciar Simulación de Tráfico" if not st.session_state.real_time_running else "⏹️ Detener Simulación"):
         st.session_state.real_time_running = not st.session_state.real_time_running
@@ -34,7 +38,7 @@ def show(modelo, y_test):
         anomalias_detectadas = []
         while st.session_state.real_time_running:
             try:
-                batch = next(consume_traffic_from_kafka())
+                batch = next(consume_traffic_simulado())
                 traffic_data_list = []
                 indices = []
 
@@ -69,23 +73,29 @@ def show(modelo, y_test):
                 df = pd.DataFrame(result_data)
                 anomalias_detectadas.extend([indices[i] for i in indices_anomalias])
 
-                try:
-                    for alert_container in alert_containers:
-                        alert_container.empty()
-                except:
-                    pass
-
                 styled_df = df.style.apply(highlight, axis=1)
-                result_container.dataframe(styled_df, use_container_width=True, height=600)
+                result_container.dataframe(styled_df, use_container_width=True, height=212)
 
-                if anomaly_detected:
-                    alert_containers = []
-                    for idx in indices_anomalias:
-                        alert_container = st.empty()
-                        alert_containers.append(alert_container)
-                        alert_container.warning(f"Anomalía detectada en la fila {idx}.", icon="⚠️")
-                        # imprimir_explicacion(idx, y_pred, X_test_batch, modelo)
+                # if anomaly_detected:
+                #     # Limpiar y generar nuevos botones dentro del contenedor
+                #     with st.session_state.explicaciones_container.container():
+                #         st.subheader("🔍 Explicaciones disponibles")
+                #         for idx in indices_anomalias:
+                #             url = f"https://example.com/explicacion?fila={idx}"  # URL ficticia, cámbiala según necesidad
 
+                #             st.markdown(
+                #                 f"""
+                #                 <a href="{url}" target="_blank">
+                #                     <button style="margin: 5px 0;">Ver explicación para fila {idx}</button>
+                #                 </a>
+                #                 """,
+                #                 unsafe_allow_html=True
+                #             )
+                # else:
+                #     # Si no hay anomalías, limpiar el contenedor
+                #     st.session_state.explicaciones_container.empty()
+
+                time.sleep(0.5)
             except StopIteration:
                 print("No more data available in the topic.")
                 break
