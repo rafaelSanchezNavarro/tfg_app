@@ -21,7 +21,7 @@ def load_model(label="Selecciona un modelo (.pkl)"):
 
 def default_supervised_model():
     try:
-        path = os.path.join("app", "models", "DecisionTreeClassifier_0.9940.pkl")
+        path = os.path.join("app", "data", "DecisionTreeClassifier_0.9940.pkl")
         modelo = joblib.load(path)
         return modelo
     except Exception as e:
@@ -30,7 +30,7 @@ def default_supervised_model():
     
 def default_dbsan_model():
     try:
-        path = os.path.join("app", "models", "dbscan_model.pkl")
+        path = os.path.join("app", "data", "dbscan_model.pkl")
         modelo = joblib.load(path)
         return modelo
     except Exception as e:
@@ -39,7 +39,7 @@ def default_dbsan_model():
     
 def default_isolation_model():
     try:
-        path = os.path.join("app", "models", "iso_forest_todo.pkl")
+        path = os.path.join("app", "data", "iso_forest_todo.pkl")
         modelo = joblib.load(path)
         return modelo
     except Exception as e:

@@ -24,36 +24,43 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
     color_normal = class_to_color[clase_normal]
     color_anomalo = class_to_color[clase_anomalo]
 
+    st.markdown("<h3 style='text-align: center;'>Comportamiento real - Comportamiento predicho</h3>", unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
 
     # 👉 Columna izquierda: clases reales
     with col1:
-        st.markdown("### Comportamiento real")
-
+        
         fig_real, ax_real = plt.subplots(figsize=(6, 6))
         for cls in unique_classes:
             idx = y_train_class3_test == cls
+            label = None
+            if cls == clase_normal:
+                label = "Normal"
+            elif cls == clase_anomalo:
+                label = "Anomalo"
+
             ax_real.scatter(
                 X_tsne_test[idx, 0],
                 X_tsne_test[idx, 1],
                 color=class_to_color[cls],
                 s=2,
-                label=str(cls)
+                label=label  # Solo etiqueta si es Normal o Anomalía
             )
 
-        ax_real.set_title("Distribución de clases reales")
+        ax_real.set_title("Comportamiento real en t-SNE")
         ax_real.set_xlabel("Componente 1")
         ax_real.set_ylabel("Componente 2")
         ax_real.grid(False)
-        ax_real.legend(loc="best", fontsize="x-small")
+        ax_real.legend(loc='best', fontsize='small', markerscale=3)
         st.pyplot(fig_real)
 
     # 👉 Columna derecha: predicción progresiva
     with col2:
-        st.markdown("### Predicción - Isolation Forest")
+        
         placeholder = st.empty()
         total_puntos = X_tsne_test.shape[0]
-        paso = 1000
+        paso = 150
 
         for i in range(0, total_puntos + paso, paso):
             fig_pred, ax_pred = plt.subplots(figsize=(6, 6))
@@ -71,9 +78,10 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
 
             # Leyenda personalizada
             leyenda = [
-                Line2D([0], [0], marker='o', color='w', label=str(clase_normal), markerfacecolor=color_normal, markersize=6),
-                Line2D([0], [0], marker='o', color='w', label=str(clase_anomalo), markerfacecolor=color_anomalo, markersize=6)
+                Line2D([0], [0], marker='o', color='w', label='Normal', markerfacecolor=color_normal, markersize=6),
+                Line2D([0], [0], marker='o', color='w', label='Anomalo', markerfacecolor=color_anomalo, markersize=6)
             ]
+
             ax_pred.legend(handles=leyenda, loc='best', fontsize='x-small')
 
             ax_pred.set_title(f"Progreso: {min(i, total_puntos)} / {total_puntos}")
@@ -83,7 +91,7 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
 
             placeholder.pyplot(fig_pred)
             plt.close()
-            time.sleep(0.005)
+            time.sleep(0.05)
 
     # Calcular métricas
     accuracy = accuracy_score(y_train_class3_test, pred_test)

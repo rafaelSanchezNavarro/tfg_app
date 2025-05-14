@@ -20,13 +20,14 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
 
     etiquetas = modelo.labels_
 
+    st.markdown("<h3 style='text-align: center;'>Distribución real - Clusters predichos</h3>", unsafe_allow_html=True)
+
     # Columnas para mostrar en paralelo
     col1, col2 = st.columns(2)
-
+    
     # 👉 Columna izquierda: distribución completa (referencia)
     with col1:
-        st.markdown("### Distribución real")
-
+        
         # Paleta de colores para clases reales
         unique_classes = np.unique(y_train_class2)
         palette_real = sns.color_palette("tab10", len(unique_classes))
@@ -49,16 +50,15 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
         ax_ref.set_xlabel("Componente 1")
         ax_ref.set_ylabel("Componente 2")
         ax_ref.grid(False)
-        ax_ref.legend(loc='best', fontsize='x-small')
+        ax_ref.legend(loc='best', fontsize='x-small', markerscale=3)
         st.pyplot(fig_ref)
 
     # 👉 Columna derecha: animación progresiva de la predicción
-        # 👉 Columna derecha: animación progresiva de la predicción
     with col2:
-        st.markdown("### Clasificación DBSCAN")
+        
         placeholder = st.empty()
         total_puntos = X_tsne.shape[0]
-        paso = 10000  # Tamaño del lote para la animación
+        paso = 500  # Tamaño del lote para la animación
 
         for i in range(0, total_puntos + paso, paso):
             fig_pred, ax_pred = plt.subplots(figsize=(6, 6))
@@ -88,7 +88,7 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
             ax_pred.legend(
                 handles=handles,
                 loc='best',
-                fontsize='x-small'
+                fontsize='x-small',
             )
 
             ax_pred.set_title(f"Progreso: {min(i, total_puntos)} / {total_puntos}")
@@ -97,10 +97,8 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
 
             placeholder.pyplot(fig_pred)
             plt.close()
-            time.sleep(0.005)
+            time.sleep(0.05)
 
-
-    st.markdown("### 🧪 Evaluación de clústeres")
 
     # Convertir a arrays por seguridad
     y_pred = np.array(etiquetas)

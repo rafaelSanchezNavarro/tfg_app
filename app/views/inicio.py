@@ -9,6 +9,7 @@ from app.logic.load_data import (
     default_isolation_model,
     default_dbsan_model,
 )
+from app.logic.producer import start_kafka_producer
 from app.views import show_architecture_2, show_dbscan, show_isolation
 
 def show():
@@ -45,6 +46,11 @@ def show():
     if st.session_state.seleccion == "clasificacion":
         st.subheader("🔍 Clasificación Supervisada")
 
+        # Lanzar el productor solo una vez
+        if "producer_started" not in st.session_state:
+            st.session_state.producer_started = True
+            start_kafka_producer()
+
         use_default = st.checkbox("Usar modelo predeterminado")
         if use_default:
             modelo_clasificacion = default_supervised_model()
@@ -55,6 +61,7 @@ def show():
             y_test = load_y_test()
             if y_test is not None:
                 show_architecture_2.show(modelo_clasificacion, y_test)
+
 
     # === DBSCAN ===
     elif st.session_state.seleccion == "dbscan":

@@ -7,3 +7,4 @@ seaborn
 pyyaml
 kafka-python
 joblib
+kafka-python
