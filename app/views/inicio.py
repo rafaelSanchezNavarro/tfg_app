@@ -15,100 +15,99 @@ from app.logic.producer import start_simulated_traffic
 from app.views import show_architecture_2, show_dbscan, show_isolation
 
 def show():
-    st.title("Trabajo de Fin de Grado - Aplicación de Análisis de Datos")
+    st.title("📊 Trabajo de Fin de Grado")
+    st.markdown("""
+    ## Modelos de Aprendizaje Automático para la Detección de Intrusos en Sistemas IIoT  
+    **Autor:** Rafael Sánchez Navarro  
+    **Grado en Ingeniería Informática**  
+    **Universidad de Castilla-La Mancha – Escuela Superior de Ingeniería Informática**
+    """)
 
     st.markdown("""
-    ### Evaluación de Modelos de Machine Learning
+    ---
+    ### Descripción de la Aplicación
 
-    Esta herramienta permite evaluar modelos de clasificación supervisada y clustering no supervisado. Puedes usar tus propios modelos o probar con modelos preentrenados.
-
-    A continuación se presentan las distintas funcionalidades disponibles:
+    Esta herramienta ha sido desarrollada como parte de un Trabajo de Fin de Grado con el objetivo de facilitar el análisis de tráfico en entornos IIoT mediante técnicas de aprendizaje automático.  
+    Proporciona una interfaz interactiva y accesible para evaluar distintos modelos, tanto supervisados como no supervisados, aplicados a flujos de datos simulados o cargados por el usuario.
     """)
+
+    st.markdown("### Funcionalidades disponibles:")
 
     with st.expander("🔍 Clasificación Supervisada"):
         st.markdown("""
-        Evalúa modelos supervisados utilizando un flujo de tráfico simulado. Puedes cargar tu propio modelo o utilizar uno predeterminado. 
-        El sistema muestra cómo el modelo detecta anomalías en tiempo real, incluyendo explicaciones breves de las decisiones del modelo.
+        Permite aplicar modelos de clasificación previamente entrenados para identificar comportamientos anómalos en tiempo real.  
+        Puede utilizarse un modelo predefinido o cargar uno propio en formato `.pkl`, así como un conjunto de prueba en formato `.csv`.  
+        La interfaz muestra las predicciones del modelo junto a explicaciones interpretables de cada decisión.
         """)
 
-    with st.expander("🧩 Clustering con DBSCAN"):
+    with st.expander("🧠 Clustering con DBSCAN"):
         st.markdown("""
-        Aplica un modelo de clustering no supervisado con DBSCAN. Visualiza agrupaciones en los datos y consulta métricas que indican la capacidad del modelo 
-        para distinguir entre comportamientos normales y anómalos.
+        Implementa el algoritmo DBSCAN para identificar agrupaciones naturales dentro de los datos sin necesidad de etiquetas.  
+        Se visualizan los clusters detectados, junto con métricas que evalúan la capacidad del modelo para diferenciar entre tráfico normal y anómalo.
         """)
 
-    with st.expander("🧩 Detección de Anomalías con Isolation Forest"):
+    with st.expander("🚨 Detección de Anomalías con Isolation Forest"):
         st.markdown("""
-        Usa un modelo Isolation Forest para identificar comportamientos anómalos. Permite comparar resultados con datos reales 
-        y visualizar métricas que evalúan su rendimiento.
+        Utiliza el algoritmo Isolation Forest para detectar posibles intrusiones o comportamientos atípicos.  
+        Esta técnica aísla anomalías en el espacio de características y reporta métricas que reflejan su efectividad en el conjunto evaluado.
         """)
 
-    st.markdown("Selecciona una opción para comenzar:")
+    st.markdown("### Selecciona una sección para comenzar:")
 
     if "seleccion" not in st.session_state:
         st.session_state.seleccion = None
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        if st.button("🔍 Clasificación"):
+        if st.button("🔎 Clasificación"):
             st.session_state.seleccion = "clasificacion"
     with col2:
-        if st.button("🧩 DBSCAN"):
+        if st.button("🧠 DBSCAN"):
             st.session_state.seleccion = "dbscan"
     with col3:
-        if st.button("🧩 Isolation Forest"):
+        if st.button("🚨 Isolation Forest"):
             st.session_state.seleccion = "isolation"
 
     st.markdown("---")
 
-    # Clasificación Supervisada
+    # === Clasificación Supervisada ===
     if st.session_state.seleccion == "clasificacion":
-        st.subheader("🔍 Clasificación Supervisada")
+        st.subheader("🔎 Clasificación Supervisada")
 
-        use_default_model = st.checkbox("Usar modelo predeterminado")
-        use_default_test = st.checkbox("Usar conjunto de prueba predeterminado")
+        use_default_model = st.checkbox("Utilizar modelo predeterminado")
+        use_default_test = st.checkbox("Utilizar conjunto de prueba predeterminado")
 
-        # Cargar modelo
-        if use_default_model:
-            modelo_clasificacion = default_supervised_model()
-        else:
-            modelo_clasificacion = load_model(label="Cargar modelo de clasificación (.pkl)")
+        modelo_clasificacion = (
+            default_supervised_model() if use_default_model
+            else load_model(label="Cargar modelo de clasificación (.pkl)")
+        )
 
-        # Cargar datos de prueba
         if use_default_test:
-            X_test = None  # Se usará dentro de la función por defecto
+            X_test = None
             y_test = load_y_test()
         else:
             st.markdown("#### Cargar conjunto de prueba manual")
-            X_test = load_csv(label="Cargar archivo de entrada X_test (.csv)")
-            y_test = load_csv(label="Cargar archivo de etiquetas y_test (.csv)")
-            
-            # Convertir y_test a Series si viene como DataFrame de una sola columna
+            X_test = load_csv(label="Archivo de entrada `X_test` (.csv)")
+            y_test = load_csv(label="Archivo de etiquetas `y_test` (.csv)")
             if isinstance(y_test, pd.DataFrame) and y_test.shape[1] == 1:
                 y_test = y_test.iloc[:, 0]
 
-        # Iniciar tráfico simulado una sola vez
-        if "producer_started" not in st.session_state and X_test is not None:
+        if "producer_started" not in st.session_state:
             st.session_state.producer_started = True
-            start_simulated_traffic(X_test=X_test)
-        elif "producer_started" not in st.session_state and X_test is None:
-            st.session_state.producer_started = True
-            start_simulated_traffic()
+            start_simulated_traffic(X_test=X_test) if X_test is not None else start_simulated_traffic()
 
         if modelo_clasificacion is not None and y_test is not None:
             show_architecture_2.show(modelo_clasificacion, y_test)
 
-
-
     # === DBSCAN ===
     elif st.session_state.seleccion == "dbscan":
-        st.subheader("🧩 Clustering con DBSCAN")
+        st.subheader("🧠 Clustering con DBSCAN")
 
-        use_default = st.checkbox("Usar modelo DBSCAN predeterminado")
-        if use_default:
-            modelo_dbscan = default_dbsan_model()
-        else:
-            modelo_dbscan = load_model(label="Cargar modelo DBSCAN (.pkl)")
+        use_default = st.checkbox("Utilizar modelo DBSCAN predeterminado")
+        modelo_dbscan = (
+            default_dbsan_model() if use_default
+            else load_model(label="Cargar modelo DBSCAN (.pkl)")
+        )
 
         if modelo_dbscan is not None:
             X_tsne = load_X_tsne()
@@ -118,13 +117,13 @@ def show():
 
     # === Isolation Forest ===
     elif st.session_state.seleccion == "isolation":
-        st.subheader("🧩 Detección de Anomalías con Isolation Forest")
+        st.subheader("🚨 Detección de Anomalías con Isolation Forest")
 
-        use_default = st.checkbox("Usar modelo Isolation Forest predeterminado")
-        if use_default:
-            modelo_isolation = default_isolation_model()
-        else:
-            modelo_isolation = load_model(label="Cargar modelo Isolation Forest (.pkl)")
+        use_default = st.checkbox("Utilizar modelo Isolation Forest predeterminado")
+        modelo_isolation = (
+            default_isolation_model() if use_default
+            else load_model(label="Cargar modelo Isolation Forest (.pkl)")
+        )
 
         if modelo_isolation is not None:
             X_tsne_train, X_tsne_test, y_train_class3_train, y_train_class3_test = load_X_tsne_con_test()
