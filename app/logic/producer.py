@@ -32,18 +32,9 @@ import os
 import time
 import pandas as pd
 
-# Variable global para almacenar los datos simulados por batches
 simulated_traffic_batches = []
 
-# app/logic/producer.py
-
-import threading
-import time
-import pandas as pd
-
-simulated_traffic_batches = []
-
-def start_simulated_traffic(X_test=None, batch_size=5, delay=2):
+def start_simulated_traffic(X_test=None, batch_size=5, delay=10):
     """
     Simula el envío de tráfico dividiendo X_test en batches pequeños.
     Si no se pasa un DataFrame, carga el predeterminado desde el disco.
@@ -51,7 +42,6 @@ def start_simulated_traffic(X_test=None, batch_size=5, delay=2):
     global simulated_traffic_batches
 
     if X_test is None:
-        import os
         path_data = os.path.join('app', 'data')
         X_test = pd.read_csv(os.path.join(path_data, "X_test_filtrado.csv"))
 
