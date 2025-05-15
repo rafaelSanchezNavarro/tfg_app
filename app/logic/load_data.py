@@ -111,3 +111,16 @@ def load_y_train_class2():
     except Exception as e:
         st.error(f"❌ Error al cargar y_train_class2: {e}")
         return None
+
+
+def load_csv(label="Selecciona un archivo CSV"):
+    with st.container():
+        csv_file = st.file_uploader(label, type="csv")
+
+    data = None
+    if csv_file is not None:
+        try:
+            data = pd.read_csv(csv_file)
+        except Exception as e:
+            st.error(f"❌ Error al cargar el archivo CSV: {e}")
+    return data
