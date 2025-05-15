@@ -60,7 +60,7 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
         
         placeholder = st.empty()
         total_puntos = X_tsne_test.shape[0]
-        paso = 150
+        paso = 3000 # Tamaño del lote para la animación
 
         for i in range(0, total_puntos + paso, paso):
             fig_pred, ax_pred = plt.subplots(figsize=(6, 6))

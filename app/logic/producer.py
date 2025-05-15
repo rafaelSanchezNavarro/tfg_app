@@ -43,7 +43,7 @@ import pandas as pd
 
 simulated_traffic_batches = []
 
-def start_simulated_traffic(X_test=None, batch_size=5, delay=3):
+def start_simulated_traffic(X_test=None, batch_size=5, delay=2):
     """
     Simula el envío de tráfico dividiendo X_test en batches pequeños.
     Si no se pasa un DataFrame, carga el predeterminado desde el disco.

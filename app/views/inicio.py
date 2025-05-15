@@ -15,23 +15,97 @@ from app.logic.producer import start_simulated_traffic
 from app.views import show_architecture_2, show_dbscan, show_isolation
 
 def show():
-    st.title("📊 Trabajo de Fin de Grado")
+    # === Estilos personalizados ===
     st.markdown("""
-    ## Modelos de Aprendizaje Automático para la Detección de Intrusos en Sistemas IIoT  
-    **Autor:** Rafael Sánchez Navarro  
-    **Grado en Ingeniería Informática**  
-    **Universidad de Castilla-La Mancha – Escuela Superior de Ingeniería Informática**
-    """)
+<style>
+/* Fondo general */
+html, body, .main {
+    background-color: #FFFFFF;
+}
 
+/* Títulos y textos */
+h1, h2, h3, .stMarkdown {
+    color: #333333;
+}
+
+/* Contenedor principal */
+.block-container {
+    padding: 2rem;
+    background-color: #FFFFFF;
+}
+
+/* Botones */
+.stButton>button {
+    background-color: #D5E8D4;
+    color: black;
+    border-radius: 6px;
+    padding: 0.4rem 1rem;
+    border: 1px solid #999999;
+    font-weight: 600;
+}
+.stButton>button:hover {
+    background-color: #BBBBBB;
+    color: black;
+}
+
+/* Expanders */
+details > summary {
+    background-color: #DAE8FC !important;
+    color: #000 !important;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #D5E8D4;
+}
+details[open] {
+    background-color: #DAE8FC !important;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #D5E8D4;
+    margin-bottom: 10px;
+}
+
+/* Checkbox y file uploader */
+.stCheckbox>label {
+    color: #000000;
+    background-color: transparent;
+    font-weight: 500;
+    margin-left: 6px;
+}
+.stFileUploader {
+    background-color: #DAE8FC;
+    padding: 10px;
+    border-radius: 5px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+    # === PRESENTACIÓN ROJA ===
     st.markdown("""
-    ---
-    ### Descripción de la Aplicación
+<div style="background-color:#F8CECC; padding:20px; border-radius:10px;">
+    <h1 style="color:#000000;">📊 Trabajo de Fin de Grado</h1>
+    <h3 style="margin-top:0;">Modelos de Aprendizaje Automático para la Detección de Intrusos en Sistemas IIoT</h3>
+    <p><strong>Autor:</strong> Rafael Sánchez Navarro</p>
+    <p><strong>Grado:</strong> Ingeniería Informática</p>
+    <p><strong>Universidad:</strong> Universidad de Castilla-La Mancha – Escuela Superior de Ingeniería Informática</p>
+</div>
+<br/>
+""", unsafe_allow_html=True)
 
-    Esta herramienta ha sido desarrollada como parte de un Trabajo de Fin de Grado con el objetivo de facilitar el análisis de tráfico en entornos IIoT mediante técnicas de aprendizaje automático.  
-    Proporciona una interfaz interactiva y accesible para evaluar distintos modelos, tanto supervisados como no supervisados, aplicados a flujos de datos simulados o cargados por el usuario.
-    """)
+    # === DESCRIPCIÓN AZUL ===
+    st.markdown("""
+<div style="background-color:#DAE8FC; padding:15px; border-radius:10px;">
+    <h3 style="margin-bottom:0;">🧭 Descripción de la Aplicación</h3>
+    <p style="margin-top:5px;">
+        Esta herramienta ha sido desarrollada como parte de un Trabajo de Fin de Grado con el objetivo de facilitar el análisis de tráfico en entornos IIoT mediante técnicas de aprendizaje automático.
+        Proporciona una interfaz interactiva y accesible para evaluar distintos modelos, tanto supervisados como no supervisados, aplicados a flujos de datos simulados o cargados por el usuario.
+    </p>
+</div>
+<br/>
+""", unsafe_allow_html=True)
 
-    st.markdown("### Funcionalidades disponibles:")
+    # === FUNCIONALIDADES ===
+    st.markdown("### 🎯 Funcionalidades disponibles:")
 
     with st.expander("🔍 Clasificación Supervisada"):
         st.markdown("""
@@ -51,8 +125,9 @@ def show():
         Utiliza el algoritmo Isolation Forest para detectar posibles intrusiones o comportamientos atípicos.  
         Esta técnica aísla anomalías en el espacio de características y reporta métricas que reflejan su efectividad en el conjunto evaluado.
         """)
-
-    st.markdown("### Selecciona una sección para comenzar:")
+        
+    # === SELECCIÓN ===
+    st.markdown("### 🧪 Selecciona una sección para comenzar:")
 
     if "seleccion" not in st.session_state:
         st.session_state.seleccion = None

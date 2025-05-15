@@ -14,7 +14,7 @@ from app.logic.consumer import consume_traffic_simulado
 
 
 def highlight(row):
-    return ['background-color: red' if row['Predicho'] != 'Normal' else '' for _ in row.index]
+    return ['background-color: #F8CECC' if row['Predicho'] != 'Normal' else '' for _ in row.index]
 
 
 def show(modelo, y_test):
@@ -36,6 +36,9 @@ def show(modelo, y_test):
 
         instancias_procesadas = 0
         anomalias_detectadas = []
+        y_true_all = []
+        y_pred_all = []
+
         while st.session_state.real_time_running:
             try:
                 batch = next(consume_traffic_simulado())
@@ -52,6 +55,8 @@ def show(modelo, y_test):
                 y_test_batch = pd.Series(y_test, index=range(len(y_test)))
                 y_pred, y_test = evaluar_arquitectura_2_tiempo_real(modelo, X_test_batch, y_test_batch.loc[X_test_batch.index])
 
+                y_true_all.extend(list(y_test))
+                y_pred_all.extend(list(y_pred))
 
                 result_data = []
                 indices_anomalias = []
