@@ -5,19 +5,42 @@ import time
 from app.logic.evaluate_architecture_2 import evaluar_arquitectura_2_tiempo_real
 from app.utils.anomalies import anomalies, encontrar_categoria
 import warnings
+import tempfile
 from sklearn.exceptions import InconsistentVersionWarning
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 import matplotlib.pyplot as plt
 import seaborn as sns
+from lime.lime_tabular import LimeTabularExplainer
 # from app.logic.consumer import consume_traffic_from_kafka
 from app.logic.consumer import consume_traffic_simulado
 
 
+def inicializar_lime_explainer(modelo):
+    if "lime_explainer" not in st.session_state:
+        path_data = os.path.join('app', 'data')
+        X_train = pd.read_csv(os.path.join(path_data, "X_train.csv"))
+
+        st.session_state.X_train_lime = X_train
+        st.session_state.lime_explainer = LimeTabularExplainer(
+            training_data=X_train.values,
+            feature_names=X_train.columns.tolist(),
+            class_names=list(modelo.classes_),
+            mode='classification',
+            random_state=42
+        )
+
+    return st.session_state.lime_explainer
+
 def highlight(row):
     return ['background-color: #F8CECC' if row['Predicho'] != 'Normal' else '' for _ in row.index]
 
-
 def show(modelo, y_test):
+    
+    if "lime_explainer" not in st.session_state:
+        st.session_state.lime_explainer = inicializar_lime_explainer(modelo)
+
+    lime_explainer = st.session_state.lime_explainer
+    
     if "real_time_running" not in st.session_state:
         st.session_state.real_time_running = False
     anomaly_detected = False
@@ -32,7 +55,7 @@ def show(modelo, y_test):
 
     if st.session_state.real_time_running:
         st.subheader("🚦 Evaluación en Tiempo Real")
-        result_container = st.empty()
+        tabla_container = st.empty()
 
         instancias_procesadas = 0
         anomalias_detectadas = []
@@ -58,49 +81,88 @@ def show(modelo, y_test):
                 y_true_all.extend(list(y_test))
                 y_pred_all.extend(list(y_pred))
 
-                result_data = []
-                indices_anomalias = []
-                anomaly_detected = False
+                anomalias_detectadas.extend([indices[i] for i, pred in enumerate(y_pred) if pred != 'Normal'])
 
-                for idx, (real, pred) in enumerate(zip(y_test, y_pred)):
-                    if pred != 'Normal':
-                        coincide = 'Anomalía detectada'
-                        anomaly_detected = True
-                        indices_anomalias.append(idx)
-                    else:
-                        coincide = ''
+                
+                with tabla_container.container():
+                    st.markdown("""
+                        <style>
+                            table.pred-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                font-family: 'Segoe UI', sans-serif;
+                                font-size: 12px;
+                                margin-top: 10px;
+                            }
+                            .pred-table th, .pred-table td {
+                                border: 1px solid #ccc;
+                                padding: 6px 8px;
+                                text-align: center;
+                                vertical-align: middle;
+                            }
+                            .pred-table th {
+                                background-color: #f0f0f0;
+                                font-weight: bold;
+                                color: #333;
+                            }
+                            .anomaly-row {
+                                background-color: #ffecec;
+                            }
+                            .lime-table {
+                                width: 100%;
+                                font-size: 11px;
+                                border-collapse: collapse;
+                                margin-top: 4px;
+                            }
+                            .lime-table td {
+                                padding: 2px 6px;
+                            }
+                        </style>
+                    """, unsafe_allow_html=True)
 
-                    result_data.append({
-                        "Predicho": pred,
-                        "Alerta": coincide
-                    })
+                    # Cabecera de la tabla
+                    st.markdown("""
+                        <table class="pred-table">
+                            <thead>
+                                <tr>
+                                    <th>Predicho</th>
+                                    <th>Alerta</th>
+                                    <th>Explicación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    """, unsafe_allow_html=True)
 
-                df = pd.DataFrame(result_data)
-                anomalias_detectadas.extend([indices[i] for i in indices_anomalias])
+                    for idx, (pred, index) in enumerate(zip(y_pred, indices)):
+                        alerta = "Anomalía detectada" if pred != "Normal" else "✅"
+                        row_class = "anomaly-row" if pred != "Normal" else ""
 
-                styled_df = df.style.apply(highlight, axis=1)
-                result_container.dataframe(styled_df, use_container_width=True, height=212)
+                        # Crear 3 columnas con celdas centradas, incluida la del expander
+                        col1, col2, col3 = st.columns([1, 1, 1])
+                        with col1:
+                            st.markdown(f"<div style='text-align: center;'>{pred}</div>", unsafe_allow_html=True)
+                        with col2:
+                            st.markdown(f"<div style='text-align: center;'>{alerta}</div>", unsafe_allow_html=True)
+                        with col3:
+                            with st.expander(f"🔍 Explicación {idx}"):
+                                with st.spinner(f'Generando explicación para instancia {index}...'):
+                                    exp = lime_explainer.explain_instance(
+                                        X_test_batch.iloc[idx],
+                                        modelo.predict_proba,
+                                        num_features=5
+                                    )
+                                    expl_html = "<table class='lime-table'>"
+                                    for feature, weight in exp.as_list():
+                                        color = "green" if weight >= 0 else "red"
+                                        expl_html += f"<tr><td>{feature}</td><td style='color:{color}; text-align:right;'>{weight:.4f}</td></tr>"
+                                    expl_html += "</table>"
+                                    st.markdown(expl_html, unsafe_allow_html=True)
 
-                # if anomaly_detected:
-                #     # Limpiar y generar nuevos botones dentro del contenedor
-                #     with st.session_state.explicaciones_container.container():
-                #         st.subheader("🔍 Explicaciones disponibles")
-                #         for idx in indices_anomalias:
-                #             url = f"https://example.com/explicacion?fila={idx}"  # URL ficticia, cámbiala según necesidad
-
-                #             st.markdown(
-                #                 f"""
-                #                 <a href="{url}" target="_blank">
-                #                     <button style="margin: 5px 0;">Ver explicación para fila {idx}</button>
-                #                 </a>
-                #                 """,
-                #                 unsafe_allow_html=True
-                #             )
-                # else:
-                #     # Si no hay anomalías, limpiar el contenedor
-                #     st.session_state.explicaciones_container.empty()
+                    st.markdown("</tbody></table>", unsafe_allow_html=True)
 
                 time.sleep(0.5)
+
             except StopIteration:
-                print("No more data available in the topic.")
+                st.warning("No hay más datos disponibles en el tópico.")
                 break
+            
