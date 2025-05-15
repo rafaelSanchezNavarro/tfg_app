@@ -31,9 +31,6 @@ def inicializar_lime_explainer(modelo):
 
     return st.session_state.lime_explainer
 
-def highlight(row):
-    return ['background-color: #F8CECC' if row['Predicho'] != 'Normal' else '' for _ in row.index]
-
 def show(modelo, y_test):
     
     if "lime_explainer" not in st.session_state:
@@ -126,7 +123,6 @@ def show(modelo, y_test):
                             <thead>
                                 <tr>
                                     <th>Predicho</th>
-                                    <th>Alerta</th>
                                     <th>Explicación</th>
                                 </tr>
                             </thead>
@@ -134,16 +130,19 @@ def show(modelo, y_test):
                     """, unsafe_allow_html=True)
 
                     for idx, (pred, index) in enumerate(zip(y_pred, indices)):
-                        alerta = "Anomalía detectada" if pred != "Normal" else "✅"
-                        row_class = "anomaly-row" if pred != "Normal" else ""
+                        color = "red" if pred != "Normal" else "black"
+                        warning_emojis = "⚠️ " if pred != "Normal" else ""
+                        closing_emojis = " ⚠️" if pred != "Normal" else ""
+
 
                         # Crear 3 columnas con celdas centradas, incluida la del expander
-                        col1, col2, col3 = st.columns([1, 1, 1])
+                        col1, col2 = st.columns([1, 1])
                         with col1:
-                            st.markdown(f"<div style='text-align: center;'>{pred}</div>", unsafe_allow_html=True)
+                            st.markdown(
+                                f"<div style='text-align: center; margin-left: -1.59cm; color: {color};'>{warning_emojis}{pred}{closing_emojis}</div>",
+                                unsafe_allow_html=True
+                            )
                         with col2:
-                            st.markdown(f"<div style='text-align: center;'>{alerta}</div>", unsafe_allow_html=True)
-                        with col3:
                             with st.expander(f"🔍 Explicación {idx}"):
                                 with st.spinner(f'Generando explicación para instancia {index}...'):
                                     exp = lime_explainer.explain_instance(
