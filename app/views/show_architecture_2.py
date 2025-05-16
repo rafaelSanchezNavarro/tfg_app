@@ -143,7 +143,8 @@ def show(modelo, y_test):
                                 unsafe_allow_html=True
                             )
                         with col2:
-                            with st.expander(f"🔍 Explicación {idx}"):
+                           expander_label = f"Normal" if pred == "Normal" else f"Anomalía"
+                            with st.expander(expander_label):
                                 with st.spinner(f'Generando explicación para instancia {index}...'):
                                     exp = lime_explainer.explain_instance(
                                         X_test_batch.iloc[idx],
