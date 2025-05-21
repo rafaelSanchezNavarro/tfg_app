@@ -14,9 +14,12 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
 
     # Extraer clases reales
     unique_classes = np.unique(y_train_class3_test)
-    palette_real = sns.color_palette("tab10", len(unique_classes))
-    class_to_color = {cls: palette_real[i] for i, cls in enumerate(unique_classes)}
-
+    
+    # Extraer los colores específicos de la paleta tab10
+    tab10_colors = plt.get_cmap('tab10').colors
+    custom_palette = [tab10_colors[4], tab10_colors[5]]
+    class_to_color = {cls: custom_palette[i] for i, cls in enumerate(unique_classes)}
+    
     # Mapear predicciones a clases reales
     clase_normal = next((cls for cls in unique_classes if "normal" in str(cls).lower()), unique_classes[0])
     clase_anomalo = next((cls for cls in unique_classes if cls != clase_normal), unique_classes[-1])
