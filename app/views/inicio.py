@@ -109,21 +109,43 @@ details[open] {
 
     with st.expander("🔍 Clasificación Supervisada"):
         st.markdown("""
-        Permite aplicar modelos de clasificación previamente entrenados para identificar comportamientos anómalos en tiempo real.  
-        Puede utilizarse un modelo predefinido o cargar uno propio en formato `.pkl`, así como un conjunto de prueba en formato `.csv`.  
-        La interfaz muestra las predicciones del modelo junto a explicaciones interpretables de cada decisión.
+        Este módulo aplica modelos de clasificación previamente entrenados para detectar comportamientos anómalos en tiempo real.  
+        La interfaz muestra las predicciones del modelo para cada muestra, junto con explicaciones generadas mediante LIME, lo que permite interpretar la influencia de cada variable en la decisión del modelo.  
+
+        El usuario puede utilizar un modelo predefinido o cargar uno propio en formato `.pkl`, y analizar un conjunto de prueba en formato `.csv`.
         """)
 
     with st.expander("🧠 Clustering con DBSCAN"):
         st.markdown("""
-        Implementa el algoritmo DBSCAN para identificar agrupaciones naturales dentro de los datos sin necesidad de etiquetas.  
-        Se visualizan los clusters detectados, junto con métricas que evalúan la capacidad del modelo para diferenciar entre tráfico normal y anómalo.
+        Este módulo utiliza el algoritmo DBSCAN para identificar agrupaciones naturales en los datos sin necesidad de etiquetas previas.  
+        Es útil para descubrir patrones anómalos en escenarios no supervisados.  
+
+        Una vez completado el análisis, cada grupo (cluster) es evaluado: si más del 50% de sus elementos corresponden a anomalías conocidas, **todo el grupo se considera anómalo**.  
+        A partir de esta clasificación binaria, se calculan métricas de rendimiento para evaluar la efectividad del modelo, tales como:
+
+        - Tasa de acierto  
+        - Precisión  
+        - Sensibilidad (Recall)  
+        - F1-score  
+        - Matriz de confusión  
+
+        Se puede utilizar un modelo preentrenado o cargar uno propio en formato `.pkl`.
         """)
 
     with st.expander("🚨 Detección de Anomalías con Isolation Forest"):
         st.markdown("""
-        Utiliza el algoritmo Isolation Forest para detectar posibles intrusiones o comportamientos atípicos.  
-        Esta técnica aísla anomalías en el espacio de características y reporta métricas que reflejan su efectividad en el conjunto evaluado.
+        Este módulo aplica el algoritmo Isolation Forest para detectar observaciones que se desvían significativamente del comportamiento general.  
+        Esta técnica es especialmente eficaz para identificar anomalías en entornos con grandes volúmenes de datos.  
+
+        Tras el análisis, se generan métricas de evaluación que permiten medir la capacidad del modelo para identificar correctamente los casos anómalos, incluyendo:
+
+        - Tasa de acierto  
+        - Precisión  
+        - Sensibilidad (Recall)  
+        - F1-score  
+        - Matriz de confusión  
+
+        Puedes utilizar un modelo predefinido o cargar uno propio en formato `.pkl`.
         """)
         
     # === SELECCIÓN ===
