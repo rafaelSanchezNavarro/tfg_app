@@ -108,45 +108,50 @@ details[open] {
     st.markdown("### 🎯 Funcionalidades disponibles:")
 
     with st.expander("🔍 Clasificación Supervisada"):
-        st.markdown("""
-        Este módulo aplica modelos de clasificación previamente entrenados para detectar comportamientos anómalos en tiempo real.  
-        La interfaz muestra las predicciones del modelo para cada muestra, junto con explicaciones generadas mediante LIME, lo que permite interpretar la influencia de cada variable en la decisión del modelo.  
+    st.markdown("""
+    Este módulo aplica modelos de clasificación previamente entrenados para detectar comportamientos anómalos en tiempo real.  
+    La interfaz muestra las predicciones del modelo para cada muestra, junto con explicaciones generadas mediante LIME, facilitando la interpretación de los resultados.  
 
-        El usuario puede utilizar un modelo predefinido o cargar uno propio en formato `.pkl`, y analizar un conjunto de prueba en formato `.csv`.
-        """)
+    Para su funcionamiento, el usuario debe cargar dos archivos:  
+    - Un conjunto de prueba con las características (`X_test`) en formato `.csv`  
+    - Las etiquetas reales correspondientes (`y_test`) también en formato `.csv`  
+
+    También puede utilizar un modelo predefinido o cargar uno propio en formato `.pkl`.
+    """)
 
     with st.expander("🧠 Clustering con DBSCAN"):
-        st.markdown("""
-        Este módulo utiliza el algoritmo DBSCAN para identificar agrupaciones naturales en los datos sin necesidad de etiquetas previas.  
-        Es útil para descubrir patrones anómalos en escenarios no supervisados.  
+    st.markdown("""
+    Este módulo aplica el algoritmo DBSCAN para detectar agrupaciones naturales en los datos sin necesidad de etiquetas previas.  
+    Esta técnica es especialmente útil para identificar patrones anómalos en contextos no supervisados, donde no se conoce previamente qué es normal o anómalo.  
 
-        Una vez completado el análisis, cada grupo (cluster) es evaluado: si más del 50% de sus elementos corresponden a anomalías conocidas, **todo el grupo se considera anómalo**.  
-        A partir de esta clasificación binaria, se calculan métricas de rendimiento para evaluar la efectividad del modelo, tales como:
+    Al finalizar el análisis, cada grupo (cluster) es evaluado: si más del 50% de sus elementos corresponden a anomalías conocidas, **todo el grupo se considera anómalo**.  
+    A partir de esta clasificación binaria, se generan métricas de evaluación que permiten medir el rendimiento del modelo, incluyendo:
 
-        - Tasa de acierto  
-        - Precisión  
-        - Sensibilidad (Recall)  
-        - F1-score  
-        - Matriz de confusión  
+    - Tasa de acierto  
+    - Precisión  
+    - Sensibilidad (Recall)  
+    - F1-score  
+    - Matriz de confusión  
 
-        Se puede utilizar un modelo preentrenado o cargar uno propio en formato `.pkl`.
-        """)
+    Puedes utilizar un modelo predefinido o cargar uno propio en formato `.pkl`, junto con un conjunto de prueba en formato `.csv`.
+    """)
 
-    with st.expander("🚨 Detección de Anomalías con Isolation Forest"):
-        st.markdown("""
-        Este módulo aplica el algoritmo Isolation Forest para detectar observaciones que se desvían significativamente del comportamiento general.  
-        Esta técnica es especialmente eficaz para identificar anomalías en entornos con grandes volúmenes de datos.  
+with st.expander("🚨 Detección de Anomalías con Isolation Forest"):
+    st.markdown("""
+    Este módulo aplica el algoritmo Isolation Forest para detectar observaciones que se desvían significativamente del comportamiento general.  
+    Esta técnica es especialmente útil para identificar patrones anómalos en contextos no supervisados, donde no se conoce previamente qué es normal o anómalo.  
 
-        Tras el análisis, se generan métricas de evaluación que permiten medir la capacidad del modelo para identificar correctamente los casos anómalos, incluyendo:
+    Al finalizar el análisis, se asigna una clasificación binaria a cada observación (normal o anómala), y se generan métricas de evaluación que permiten medir el rendimiento del modelo, incluyendo:
 
-        - Tasa de acierto  
-        - Precisión  
-        - Sensibilidad (Recall)  
-        - F1-score  
-        - Matriz de confusión  
+    - Tasa de acierto  
+    - Precisión  
+    - Sensibilidad (Recall)  
+    - F1-score  
+    - Matriz de confusión  
 
-        Puedes utilizar un modelo predefinido o cargar uno propio en formato `.pkl`.
-        """)
+    Puedes utilizar un modelo predefinido o cargar uno propio en formato `.pkl`, junto con un conjunto de prueba en formato `.csv`.
+    """)
+
         
     # === SELECCIÓN ===
     st.markdown("### 🧪 Selecciona una sección para comenzar:")
