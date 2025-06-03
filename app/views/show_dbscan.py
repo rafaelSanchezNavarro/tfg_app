@@ -147,7 +147,7 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
     col1.metric("🎯 Tasa de acierto", f"{accuracy:.2%}")
     col2.metric("📌 Precisión", f"{precision:.2%}")
     col3.metric("📈 Sensibilidad (Recall)", f"{recall:.2%}")
-    col4.metric("📊 FF1-score", f"{f1:.2%}")
+    col4.metric("📊 F1-score", f"{f1:.2%}")
 
     # Matriz de confusión
     st.markdown("### 🔍 Matriz de confusión")
