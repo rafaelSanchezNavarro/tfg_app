@@ -113,7 +113,7 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
     # Matriz de confusión
     st.markdown("### 🔍 Matriz de confusión")
     labels = sorted(set(y_train_class3_test))
-    label_names = [str(label) for label in labels]  
+    label_names = ['Normal' if label == 0 else 'Anómalo' for label in labels]  
     cm = confusion_matrix(y_train_class3_test, pred_test)
-    cm_df = pd.DataFrame(cm, index=[f'Real {l}' for l in label_names], columns=[f'Pred {l}' for l in label_names])
+    cm_df = pd.DataFrame(cm, index=[f'Real {l}' for l in label_names], columns=[f'Predicho {l}' for l in label_names])
     st.dataframe(cm_df, use_container_width=True)
