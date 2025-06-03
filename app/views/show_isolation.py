@@ -105,10 +105,10 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
     # Mostrar métricas con Streamlit
     st.markdown("### 📊 Métricas de evaluación (conjunto de test)")
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("🎯 Accuracy", f"{accuracy:.2%}")
-    col2.metric("📌 Precision", f"{precision:.2%}")
-    col3.metric("📈 Recall", f"{recall:.2%}")
-    col4.metric("📊 F1 Score", f"{f1:.2%}")
+    col1.metric("🎯 Tasa de acierto", f"{accuracy:.2%}")
+    col2.metric("📌 Precisión", f"{precision:.2%}")
+    col3.metric("📈 Sensibilidad (Recall)", f"{recall:.2%}")
+    col4.metric("📊 FF1-score", f"{f1:.2%}")
 
     # Matriz de confusión
     st.markdown("### 🔍 Matriz de confusión")

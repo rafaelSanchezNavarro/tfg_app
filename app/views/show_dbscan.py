@@ -144,10 +144,10 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
     f1 = f1_score(y_train_class3, y_pred_bin, zero_division=0)
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Accuracy", f"{accuracy:.2%}")
-    col2.metric("Precision", f"{precision:.2%}")
-    col3.metric("Recall", f"{recall:.2%}")
-    col4.metric("F1 Score", f"{f1:.2%}")
+    col1.metric("🎯 Tasa de acierto", f"{accuracy:.2%}")
+    col2.metric("📌 Precisión", f"{precision:.2%}")
+    col3.metric("📈 Sensibilidad (Recall)", f"{recall:.2%}")
+    col4.metric("📊 FF1-score", f"{f1:.2%}")
 
     # Matriz de confusión
     st.markdown("### 🔍 Matriz de confusión")
