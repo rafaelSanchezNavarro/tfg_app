@@ -166,7 +166,7 @@ def show(modelo, y_test):
                 st.warning("No hay más datos disponibles en el tópico.")
                 break
 
-            # Espacio en blanco al final
-            st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
+    # Espacio en blanco al final
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
 
             
