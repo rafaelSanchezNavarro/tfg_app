@@ -117,3 +117,6 @@ def show(modelo_isolation, X_tsne_test, y_train_class3_test):
     cm = confusion_matrix(y_train_class3_test, pred_test)
     cm_df = pd.DataFrame(cm, index=[f'Real {l}' for l in label_names], columns=[f'Predicho {l}' for l in label_names])
     st.dataframe(cm_df, use_container_width=True)
+
+    # Espacio en blanco al final
+    st.markdown("<br><br><br><br><br>", unsafe_allow_html=True)
