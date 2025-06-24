@@ -58,7 +58,7 @@ def show(modelo, X_tsne, y_train_class3, y_train_class2):
         
         placeholder = st.empty()
         total_puntos = X_tsne.shape[0]
-        paso = 15000  # Tamaño del lote para la animación
+        paso = 20000  # Tamaño del lote para la animación
 
         for i in range(0, total_puntos + paso, paso):
             fig_pred, ax_pred = plt.subplots(figsize=(6, 6))
