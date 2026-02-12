@@ -1,13 +1,13 @@
-# 🎓 Trabajo de Fin de Grado – Análisis de Modelos de Machine Learning
+# 🎓 Trabajo de Fin de Grado – Charca party
 
-Este proyecto es una aplicación desarrollada en Python y Streamlit para evaluar modelos de Machine Learning aplicados a tráfico de red. La aplicación permite analizar modelos supervisados y no supervisados mediante una interfaz visual interactiva. También simula tráfico en tiempo real utilizando Kafka.
+Este proyecto es una aplicación desarrollada en Python y Streamlit para evaluar charca partys.
 
 ---
 
 ## 🧠 Funcionalidades principales
 
-- 🔍 **Clasificación Supervisada**  
-  Carga o usa un modelo predeterminado para evaluar su rendimiento sobre datos reales (precisión, matriz de confusión, F1-score...).
+- 🔍 **La charca party**  
+  Carga o usa una charca party.
 
 - 🧩 **Clustering No Supervisado (DBSCAN)**  
   Explora la estructura de los datos sin etiquetas usando t-SNE + DBSCAN.
@@ -24,7 +24,7 @@ Este proyecto es una aplicación desarrollada en Python y Streamlit para evaluar
 
 ```
 tfg_app/
-├── app/
+├── charca_party/
 │   ├── data/                     # Datos como X_test_filtrado.csv
 │   ├── logic/
 │   │   ├── load_data.py          # Carga de datos para cada módulo
@@ -46,6 +46,7 @@ tfg_app/
 
 ## 💻 Requisitos
 
+- Charca party
 - Python 3.10 o 3.11
 - Docker y Docker Compose (para Kafka)
 - Navegador moderno
@@ -151,6 +152,7 @@ Puedes elegir usar estos modelos sin necesidad de cargarlos manualmente.
 ## ✍️ Autor
 
 Rafael Sánchez Navarro  
+Charca party
 Repositorio: [github.com/rafaelSanchezNavarro/tfg_app](https://github.com/rafaelSanchezNavarro/tfg_app)
 
 ---
